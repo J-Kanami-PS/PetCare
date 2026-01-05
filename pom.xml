@@ -5,30 +5,30 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.4.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.example</groupId>
     <artifactId>PetCare</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version> <!--Para la version del jar-->
     <name>PetCare</name>
     <description>PetCare</description>
     <properties>
         <java.version>17</java.version>
     </properties>
     <dependencies>
-        <!--Incluye Hibernate, EntityManager, Repositories, Transacciones-->
+        <!--Incluye Hibernate, EntityManager, Repositories, Transactions-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId> <!--@Entity, @Repository, @Transactional-->
         </dependency>
         <!--Maneja versionado de base de datos-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-liquibase</artifactId>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
         </dependency>
 
-        <!--Driver JDBC para PostgreSQL-->
+        <!--Driver JDBC para Postgres-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -48,12 +48,16 @@
         <!--Permite Controllers, REST APIs, JSON-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId> <!--Incluye WebMVC + Jackson + Tomcat-->
+            <artifactId>spring-boot-starter-web</artifactId> <!--Include WebMVC + Jackson + Tomcat-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
     </dependencies>
 
