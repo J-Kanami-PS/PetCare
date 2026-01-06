@@ -26,21 +26,21 @@ public class Pet extends AbstractEntity {
     @JoinColumn(name = "fk_owner", nullable = false)
     private Owner owner;
 
-    @NotBlank
-    @Size(max = 60)
+    @NotBlank(message = "El nombre de la mascota es obligatorio")
+    @Size(max = 60, message = "El nombre de la mascota no puede exceder 60 caracteres")
     @Column(name = "name", nullable = false, length = 60)
     private String name;
 
-    @NotBlank
-    @Size(max = 50)
+    @NotBlank(message = "El tipo de mascota es obligatorio")
+    @Size(max = 50, message = "El tipo de mascota no puede exceder 50 caracteres")
     @Column(name = "type_pet", nullable = false, length = 50)
     private String typePet;
 
-    @Size(max = 60)
+    @Size(max = 60, message = "La raza de la mascota no puede exceder 60 caracteres")
     @Column(name = "breed", length = 60)
     private String breed;
 
-    @NotNull
+    @NotNull(message = "El tamaño de la mascota es obligatorio")
     @Enumerated(EnumType.STRING)
     @Column(name = "size", nullable = false, length = 20)
     private PetSizeEnum size;

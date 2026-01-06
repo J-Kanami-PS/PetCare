@@ -48,7 +48,7 @@
         <!--Permite Controllers, REST APIs, JSON-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId> <!--Include WebMVC + Jackson + Tomcat-->
+            <artifactId>spring-boot-starter-web</artifactId> <!--Incluye WebMVC + Jackson + Tomcat-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

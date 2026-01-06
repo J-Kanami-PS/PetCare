@@ -16,8 +16,8 @@ import java.util.Set;
 @Table(name = "service_types")
 @AttributeOverride(name = "id", column = @Column(name = "id_service_type"))
 public class ServiceType extends BaseEntity {
-    @NotBlank
-    @Size(max = 100)
+    @NotBlank(message = "El nombre del tipo de servicio es obligatorio")
+    @Size(max = 100, message = "El nombre del tipo de servicio no puede exceder 100 caracteres")
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 

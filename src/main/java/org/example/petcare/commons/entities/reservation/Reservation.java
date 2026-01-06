@@ -31,11 +31,11 @@ public class Reservation extends AbstractEntity {
     @JoinColumn(name = "fk_carer", nullable = false)
     private Carer carer;
 
-    @NotNull
+    @NotNull(message = "La fecha del servicio es obligatoria")
     @Column(name = "service_date", nullable = false)
     private LocalDateTime serviceDate;
 
-    @NotNull
+    @NotNull(message = "El estado de la reserva es obligatorio")
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private ReservationStateEnum state = ReservationStateEnum.PENDING;

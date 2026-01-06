@@ -34,8 +34,8 @@ public class Service extends AbstractEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @NotNull
-    @Positive
+    @NotNull(message = "El precio es obligatorio")
+    @Positive(message = "El precio debe ser mayor a cero")
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 

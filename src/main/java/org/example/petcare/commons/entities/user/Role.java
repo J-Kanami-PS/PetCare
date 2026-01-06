@@ -17,7 +17,7 @@ import java.util.Set;
 @AttributeOverride(name = "id", column = @Column(name = "id_role"))
 public class Role extends BaseEntity {
     @NotBlank(message = "El nombre del rol es obligatorio")
-    @Size(max = 50)
+    @Size(max = 50, message = "El nombre del rol no puede exceder 50 caracteres")
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 

@@ -19,23 +19,23 @@ import java.util.Set;
         @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at"))
 })
 public class User extends AbstractEntity {
-    @NotBlank
-    @Size(max = 60)
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(max = 60, message = "El nombre no puede exceder 60 caracteres")
     @Column(name = "name", nullable = false, length = 60)
     private String name;
 
-    @NotBlank
-    @Size(max = 60)
+    @NotBlank(message = "El apellido es obligatorio")
+    @Size(max = 60, message = "El apellido no puede exceder 60 caracteres")
     @Column(name = "last_name", nullable = false, length = 60)
     private String lastName;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "Debe ser un email válido")
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @NotBlank
-    @Pattern(regexp = "\\d{10,15}", message = "Debe tener entre 10 y 15 dígitos")
+    @NotBlank(message = "El número de teléfono es obligatorio")
+    @Pattern(regexp = "\\d{10,15}", message = "El teléfono debe tener entre 10 y 15 dígitos")
     @Column(name = "phone_number", nullable = false, length = 20)
     private String phoneNumber;
 

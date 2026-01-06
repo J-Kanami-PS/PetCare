@@ -21,11 +21,12 @@ public class Carer extends AbstractEntity {
     @JoinColumn(name = "fk_user", nullable = false, unique = true)
     private User user;
 
-    @NotNull
+    @NotNull(message = "El estado de disponibilidad es obligatorio")
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private AvailabilityStateEnum status = AvailabilityStateEnum.AVAILABLE;
 
+    @NotNull(message = "La cantidad máxima de mascotas es obligatoria")
     @Column(name = "max_pets_allowed", nullable = false)
     private Integer maxPetsAllowed = 1;
 }
