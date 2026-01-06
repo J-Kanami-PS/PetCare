@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="7" author="J-Kanami-PS">
+        <createTable tableName="pets">
+            <column name="id_pet" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fk_owner" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_pets_owner" referencedTableName="owners" referencedColumnNames="id_owner"/>
+            </column>
+            <column name="name" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_pet" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="breed" type="VARCHAR(60)"/>
+            <column name="size" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birth_date" type="DATE"/>
+            <column name="photo" type="TEXT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8" author="J-Kanami-PS">
+        <createTable tableName="services">
+            <column name="id_service" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fk_carer" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_services_carer" referencedTableName="carers" referencedColumnNames="id_carer"/>
+            </column>
+            <column name="fk_service_type" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_services_type" referencedTableName="service_types" referencedColumnNames="id_service_type"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="9" author="J-Kanami-PS">
+        <createTable tableName="reservation">
+            <column name="id_reservation" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fk_owner" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_reservation_owner" referencedTableName="owners" referencedColumnNames="id_owner"/>
+            </column>
+            <column name="fk_carer" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_reservation_carer" referencedTableName="carers" referencedColumnNames="id_carer"/>
+            </column>
+            <column name="service_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="10" author="J-Kanami-PS">
+        <createTable tableName="reservation_services">
+            <column name="id_reservation_service" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fk_reservation" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_res_serv_reservation" referencedTableName="reservation" referencedColumnNames="id_reservation"/>
+            </column>
+            <column name="fk_service" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_res_serv_service" referencedTableName="services" referencedColumnNames="id_service"/>
+            </column>
+            <column name="fk_pet" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_res_serv_pet" referencedTableName="pets" referencedColumnNames="id_pet"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
