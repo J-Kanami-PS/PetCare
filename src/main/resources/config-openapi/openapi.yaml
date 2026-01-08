@@ -1,0 +1,644 @@
+openapi: 3.0.3
+info:
+  title: Pet Care API
+  version: v1
+  description: Definition of DTOs for Pet Care application
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local server
+
+paths: {}
+
+components:
+  schemas:
+    # ================== ENUMS ==================
+    PetSizeEnum:
+      type: string
+      enum:
+        - SMALL
+        - MEDIUM
+        - LARGE
+      description: Size of the pet
+
+    AvailabilityStateEnum:
+      type: string
+      enum:
+        - AVAILABLE
+        - NOT_AVAILABLE
+        - BUSY
+      description: Carer availability status
+
+    ReservationStateEnum:
+      type: string
+      enum:
+        - PENDING
+        - ACCEPTED
+        - REJECTED
+        - FINISHED
+      description: Status of the reservation
+
+    # ================== BASE STRUCTURES (INHERITANCE) ==================
+    BaseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier
+
+    AbstractDTO:
+      allOf:
+        - $ref: '#/components/schemas/BaseDTO'
+        - type: object
+          properties:
+            createdAt:
+              type: string
+              format: date-time
+              description: Creation timestamp
+            updatedAt:
+              type: string
+              format: date-time
+              description: Last update timestamp
+            active:
+              type: boolean
+              description: Active status
+
+    BaseResult:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          example: 10
+          description: Total number of items
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseDTO'
+
+    # ================== ROLES ==================
+    RoleRequestDTO:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          maxLength: 50
+          description: Name of the role
+
+    RoleResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/BaseDTO'
+        - type: object
+          properties:
+            name:
+              type: string
+              maxLength: 50
+              description: Name of the role
+
+    RoleResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/RoleResponseDTO'
+
+    # ================== USERS ==================
+    UserRequestDTO:
+      type: object
+      required: [name, lastName, email, phoneNumber]
+      properties:
+        name:
+          type: string
+          maxLength: 60
+          description: Name of the user
+        lastName:
+          type: string
+          maxLength: 60
+          description: Last name of the user
+        email:
+          type: string
+          format: email
+          maxLength: 100
+          description: Email address of the user
+        phoneNumber:
+          type: string
+          pattern: '^\d{10,15}$'
+          description: Phone number of the user (10-15 digits)
+        profilePhoto:
+          type: string
+          format: uri
+          description: URL of the user's profile photo
+
+    UserResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/AbstractDTO'
+        - type: object
+          properties:
+            name:
+              type: string
+              maxLength: 60
+              description: Name of the user
+            lastName:
+              type: string
+              maxLength: 60
+              description: Last name of the user
+            email:
+              type: string
+              format: email
+              maxLength: 100
+              description: Email address of the user
+            phoneNumber:
+              type: string
+              pattern: '^\d{10,15}$'
+              description: Phone number of the user
+            profilePhoto:
+              type: string
+              format: uri
+              description: URL of the user's profile photo
+
+    UserResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserResponseDTO'
+
+    # ================== USER ROLES ==================
+    UserRoleRequestDTO:
+      type: object
+      required: [roleId, userId]
+      properties:
+        roleId:
+          type: integer
+          format: int64
+          description: ID of the role assigned to the user
+        userId:
+          type: integer
+          format: int64
+          description: User ID associated with the role
+
+    UserRoleResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/AbstractDTO'
+        - type: object
+          properties:
+            roleId:
+              type: integer
+              format: int64
+              description: ID of the role assigned to the user
+            userId:
+              type: integer
+              format: int64
+              description: User ID associated with the role
+            roleName:
+              type: string
+              maxLength: 50
+              description: Name of the role
+            userName:
+              type: string
+              maxLength: 60
+              description: Name of the user
+            userEmail:
+              type: string
+              format: email
+              description: Email of the user
+
+    UserRoleResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserRoleResponseDTO'
+
+    # ================== OWNERS ==================
+    OwnerRequestDTO:
+      type: object
+      required: [userId]
+      properties:
+        userId:
+          type: integer
+          format: int64
+          description: User ID associated with the owner
+
+    OwnerResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/AbstractDTO'
+        - type: object
+          properties:
+            userId:
+              type: integer
+              format: int64
+              description: User ID associated with the owner
+            userName:
+              type: string
+              maxLength: 60
+              description: Name of the owner
+            userLastName:
+              type: string
+              maxLength: 60
+              description: Last name of the owner
+            userEmail:
+              type: string
+              format: email
+              maxLength: 100
+              description: Email of the owner
+            userPhoneNumber:
+              type: string
+              pattern: '^\d{10,15}$'
+              description: Phone number of the owner
+
+    OwnerResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/OwnerResponseDTO'
+
+    # ================== CARERS ==================
+    CarerRequestDTO:
+      type: object
+      required: [userId, status, maxPetsAllowed]
+      properties:
+        userId:
+          type: integer
+          format: int64
+          description: User ID associated with the carer
+        status:
+          $ref: '#/components/schemas/AvailabilityStateEnum'
+        maxPetsAllowed:
+          type: integer
+          minimum: 1
+          description: Maximum number of pets allowed by the carer
+
+    CarerResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/AbstractDTO'
+        - type: object
+          properties:
+            userId:
+              type: integer
+              format: int64
+              description: User ID associated with the carer
+            userName:
+              type: string
+              maxLength: 60
+              description: Name of the carer (flattened from user)
+            userLastName:
+              type: string
+              maxLength: 60
+              description: Last name of the carer (flattened from user)
+            userEmail:
+              type: string
+              format: email
+              maxLength: 100
+              description: Email of the carer (flattened from user)
+            userPhoneNumber:
+              type: string
+              pattern: '^\d{10,15}$'
+              description: Phone number of the carer (flattened from user)
+            status:
+              $ref: '#/components/schemas/AvailabilityStateEnum'
+            maxPetsAllowed:
+              type: integer
+              minimum: 1
+              description: Maximum number of pets allowed by the carer
+
+    CarerResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/CarerResponseDTO'
+
+    # ================== SERVICE TYPES ==================
+    ServiceTypeRequestDTO:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          description: Name of the service type
+
+    ServiceTypeResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/BaseDTO'
+        - type: object
+          properties:
+            name:
+              type: string
+              maxLength: 100
+              description: Name of the service type
+
+    ServiceTypeResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/ServiceTypeResponseDTO'
+
+    # ================== PETS ==================
+    PetRequestDTO:
+      type: object
+      required: [ownerId, name, typePet, size]
+      properties:
+        ownerId:
+          type: integer
+          format: int64
+          description: ID of the owner
+        name:
+          type: string
+          maxLength: 60
+          description: Name of the pet
+        typePet:
+          type: string
+          maxLength: 50
+          description: Type of pet (e.g., dog, cat, bird)
+        breed:
+          type: string
+          maxLength: 60
+          description: Breed of the pet
+        size:
+          $ref: '#/components/schemas/PetSizeEnum'
+        birthDate:
+          type: string
+          format: date
+          description: Birth date of the pet
+        photo:
+          type: string
+          format: uri
+          description: URL of the pet's photo
+
+    PetResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/AbstractDTO'
+        - type: object
+          properties:
+            ownerId:
+              type: integer
+              format: int64
+              description: ID of the owner
+            ownerName:
+              type: string
+              maxLength: 60
+              description: Name of the owner
+            ownerLastName:
+              type: string
+              maxLength: 60
+              description: Last name of the owner
+            ownerEmail:
+              type: string
+              format: email
+              description: Email of the owner
+            name:
+              type: string
+              maxLength: 60
+              description: Name of the pet
+            typePet:
+              type: string
+              maxLength: 50
+              description: Type of pet
+            breed:
+              type: string
+              maxLength: 60
+              description: Breed of the pet
+            size:
+              $ref: '#/components/schemas/PetSizeEnum'
+            birthDate:
+              type: string
+              format: date
+              description: Birth date of the pet
+            photo:
+              type: string
+              format: uri
+              description: URL of the pet's photo
+
+    PetResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/PetResponseDTO'
+
+    # ================== SERVICES ==================
+    ServiceRequestDTO:
+      type: object
+      required: [carerId, serviceTypeId, price]
+      properties:
+        carerId:
+          type: integer
+          format: int64
+          description: ID of the carer providing the service
+        serviceTypeId:
+          type: integer
+          format: int64
+          description: ID of the service type
+        description:
+          type: string
+          description: Description of the service
+        price:
+          type: number
+          minimum: 0.01
+          description: Price of the service
+
+    ServiceResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/AbstractDTO'
+        - type: object
+          properties:
+            carerId:
+              type: integer
+              format: int64
+              description: ID of the carer providing the service
+            carerName:
+              type: string
+              maxLength: 60
+              description: Name of the carer (flattened)
+            carerEmail:
+              type: string
+              format: email
+              description: Email of the carer (flattened)
+            carerStatus:
+              $ref: '#/components/schemas/AvailabilityStateEnum'
+            serviceTypeId:
+              type: integer
+              format: int64
+              description: ID of the service type
+            serviceTypeName:
+              type: string
+              maxLength: 100
+              description: Name of the service type
+            description:
+              type: string
+              description: Description of the service
+            price:
+              type: number
+              minimum: 0.01
+              description: Price of the service
+
+    ServiceResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/ServiceResponseDTO'
+
+    # ================== RESERVATIONS ==================
+    ReservationRequestDTO:
+      type: object
+      required: [ownerId, carerId, serviceDate]
+      properties:
+        ownerId:
+          type: integer
+          format: int64
+          description: ID of the owner making the reservation
+        carerId:
+          type: integer
+          format: int64
+          description: ID of the carer
+        serviceDate:
+          type: string
+          format: date-time
+          description: Date and time of the service
+        status:
+          $ref: '#/components/schemas/ReservationStateEnum'
+
+    ReservationResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/AbstractDTO'
+        - type: object
+          properties:
+            ownerId:
+              type: integer
+              format: int64
+              description: ID of the owner making the reservation
+            ownerName:
+              type: string
+              maxLength: 60
+              description: Name of the owner
+            ownerEmail:
+              type: string
+              format: email
+              description: Email of the owner
+            carerId:
+              type: integer
+              format: int64
+              description: ID of the carer
+            carerName:
+              type: string
+              maxLength: 60
+              description: Name of the carer
+            carerEmail:
+              type: string
+              format: email
+              description: Email of the carer
+            serviceDate:
+              type: string
+              format: date-time
+              description: Date and time of the service
+            status:
+              $ref: '#/components/schemas/ReservationStateEnum'
+
+    ReservationResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReservationResponseDTO'
+
+    # ================== RESERVATION SERVICES ==================
+    ReservationServiceRequestDTO:
+      type: object
+      required: [reservationId, serviceId, petId]
+      properties:
+        reservationId:
+          type: integer
+          format: int64
+          description: ID of the reservation
+        serviceId:
+          type: integer
+          format: int64
+          description: ID of the service
+        petId:
+          type: integer
+          format: int64
+          description: ID of the pet
+
+    ReservationServiceResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/AbstractDTO'
+        - type: object
+          properties:
+            reservationId:
+              type: integer
+              format: int64
+              description: ID of the reservation
+            reservationServiceDate:
+              type: string
+              format: date-time
+              description: Service date of the reservation
+            reservationStatus:
+              $ref: '#/components/schemas/ReservationStateEnum'
+            serviceId:
+              type: integer
+              format: int64
+              description: ID of the service
+            serviceName:
+              type: string
+              maxLength: 100
+              description: Name/Type of the service
+            servicePrice:
+              type: number
+              description: Price of the service
+            petId:
+              type: integer
+              format: int64
+              description: ID of the pet
+            petName:
+              type: string
+              maxLength: 60
+              description: Name of the pet
+            petType:
+              type: string
+              maxLength: 50
+              description: Type of the pet (flattened)
+            petSize:
+              $ref: '#/components/schemas/PetSizeEnum'
+
+    ReservationServiceResult:
+      allOf:
+        - $ref: '#/components/schemas/BaseResult'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReservationServiceResponseDTO'
